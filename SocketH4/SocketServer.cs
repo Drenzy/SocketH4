@@ -19,10 +19,8 @@ namespace SocketH4
 
         async Task Sever()
         {
-            using Socket listener = new(
-            IpEndPoint.AddressFamily,
-            SocketType.Stream,
-            ProtocolType.Tcp);
+
+            using Socket listener = new(IpEndPoint.AddressFamily,SocketType.Stream,ProtocolType.Tcp);
 
             listener.Bind(IpEndPoint);
             listener.Listen(100);
