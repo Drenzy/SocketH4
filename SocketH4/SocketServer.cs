@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketH4
+namespace Server
 {
     internal class SocketServer
     {
@@ -17,13 +17,15 @@ namespace SocketH4
             this.IpEndPoint = ipEndPoint;
         }
 
-        async Task Sever()
+        public async Task StartServerAsync()
         {
 
             using Socket listener = new(IpEndPoint.AddressFamily,SocketType.Stream,ProtocolType.Tcp);
 
             listener.Bind(IpEndPoint);
             listener.Listen(100);
+
+            await Console.Out.WriteLineAsync($"Listening on... {IpEndPoint}");
 
             var handler = await listener.AcceptAsync();
             while (true)
