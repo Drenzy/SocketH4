@@ -6,13 +6,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace SocketServer
 {
-    internal class SocketServer
+    internal class Server
     {
         private IPEndPoint IpEndPoint;
 
-        public SocketServer(IPEndPoint ipEndPoint)
+        public Server(IPEndPoint ipEndPoint)
         {
             this.IpEndPoint = ipEndPoint;
         }
@@ -27,22 +27,22 @@ namespace Server
 
             await Console.Out.WriteLineAsync($"Listening on... {IpEndPoint}");
 
-            var handler = await listener.AcceptAsync();
+            Socket handler = await listener.AcceptAsync();
             while (true)
             {
                 // Receive message.
-                var buffer = new byte[1_024];
-                var received = await handler.ReceiveAsync(buffer, SocketFlags.None);
-                var response = Encoding.UTF8.GetString(buffer, 0, received);
+                byte[] buffer = new byte[1_024];
+                int received = await handler.ReceiveAsync(buffer);
+                string response = Encoding.UTF8.GetString(buffer, 0, received);
 
-                var eom = "<|EOM|>";
+                string eom = "<|EOM|>";
                 if (response.IndexOf(eom) > -1 /* is end of message */)
                 {
                     Console.WriteLine(
                         $"Socket server received message: \"{response.Replace(eom, "")}\"");
 
-                    var ackMessage = "<|ACK|>";
-                    var echoBytes = Encoding.UTF8.GetBytes(ackMessage);
+                    string ackMessage = "<|ACK|>";
+                    byte[] echoBytes = Encoding.UTF8.GetBytes(ackMessage);
                     await handler.SendAsync(echoBytes, 0);
                     Console.WriteLine(
                         $"Socket server sent acknowledgment: \"{ackMessage}\"");
