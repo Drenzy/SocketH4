@@ -15,18 +15,27 @@ namespace SocketClient
         public Client(IPEndPoint ipEndPoint)
         {
             this.ipEndPoint = ipEndPoint;
+            while (true)
+            {
+            string msg = CreateMessage();
+             _= StartClientAsync(msg + "!<|EOM|>");
+            }
+            
         }
 
-        public async Task StartClientAsync()
+        public async Task StartClientAsync(string message)
         {
             using Socket client = new(ipEndPoint.AddressFamily,SocketType.Stream,ProtocolType.Tcp);
+            while (true) { 
 
             await client.ConnectAsync(ipEndPoint);
+
             while (true)
             {
                 // Send message.
-                var message = "Hi friends 👋!<|EOM|>";
-                var messageBytes = Encoding.UTF8.GetBytes(message);
+                //string message = "Hi friends 👋!<|EOM|>";
+               // string message = CreateMessage() + "!<|EOM|>";
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message);
                 _ = await client.SendAsync(messageBytes, SocketFlags.None);
                 Console.WriteLine($"Socket client sent message: \"{message}\"");
 
@@ -47,13 +56,12 @@ namespace SocketClient
 
             client.Shutdown(SocketShutdown.Both);
         }
-        static IPEndPoint? GetIPEndPoint()
+    }
+
+        private string? CreateMessage()
         {
-            IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName(), AddressFamily.InterNetwork);
-            IPAddress[] addressList = iPHostEntry.AddressList;
-            //TODO pick IP Address more inteligently
-            if (addressList == null || addressList[0] == null) return null;
-            return new IPEndPoint(addressList[0], 8090);
+            Console.WriteLine("MSG:");
+            return Console.ReadLine();
         }
     }
 }

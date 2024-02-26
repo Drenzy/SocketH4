@@ -9,8 +9,9 @@ namespace SocketClient
             Console.WriteLine("Hello, World!");
             IPEndPoint? ipEndPoint = IpClassLibrary.Class1.GetIPEndPoint();
             if (ipEndPoint != null) {
-                var t = Task.Run(async () => await new Client(ipEndPoint).StartClientAsync());
+                //var t = Task.Run(async () => await new Client(ipEndPoint).StartClientAsync());
                // var res = t;
+               new Client(ipEndPoint);
                 while (true)
                 {
                     Thread.Sleep(1000);
