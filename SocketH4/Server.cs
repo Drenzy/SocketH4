@@ -23,12 +23,12 @@ namespace SocketServer
             Socket listener = new(IpEndPoint.AddressFamily,SocketType.Stream,ProtocolType.Tcp);
 
             listener.Bind(IpEndPoint);
-
+            listener.Listen(100);
             while (true)
             {
 
             
-            listener.Listen(100);
+           
             await Console.Out.WriteLineAsync($"Listening on... {IpEndPoint}");
             Socket handler = await listener.AcceptAsync();
 
@@ -45,7 +45,8 @@ namespace SocketServer
                     if (response.IndexOf(eom) > -1 /* is end of message */)
                     {
                         Console.WriteLine(
-                            $"Socket server received message: \"{response.Replace(eom, "")}\"");
+                            $"Socket server received message: \"{response.Replace(eom, "")}\" +" +
+                            $"From {handler.RemoteEndPoint}");
 
                         string ackMessage = "<|ACK|>";
                         byte[] echoBytes = Encoding.UTF8.GetBytes(ackMessage);
