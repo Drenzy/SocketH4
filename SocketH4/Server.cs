@@ -56,9 +56,6 @@ namespace SocketServer
 
                         break;
                     }
-                    // Sample output:
-                    //    Socket server received message: "Hi friends 👋!"
-                    //    Socket server sent acknowledgment: "<|ACK|>"
                 }
             }
         }
